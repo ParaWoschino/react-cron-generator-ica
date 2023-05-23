@@ -9,7 +9,10 @@ interface CronProp {
     showResultCron: boolean
     translateFn?(key: string): string
     locale?: string
-    options?: {headers: HeaderKeyType[] }
+    options?: {
+        headers: HeaderKeyType[]
+        defaultTab?: number
+    }
 }
 interface State {
     value: string[]
@@ -25,9 +28,6 @@ const Cron: React.FunctionComponent<CronProp>  = (props) => {
         if(props.translateFn && !props.locale) {
             console.log('Warning !!! locale not set while using translateFn');
         }
-        // if(this.props.onRef) {
-        //     this.props.onRef(this);
-        // }
     }, [])
     useEffect(() => {
         let newVal = '';
@@ -56,7 +56,9 @@ const Cron: React.FunctionComponent<CronProp>  = (props) => {
             prevState.value = value.replace(/,/g, '!').split(' ');
         }
         let val = prevState.value;
-        if((val[1].search('/') !== -1) && (val[2] === '*') && (val[3] === '1/1')) {
+        if (props.defaultTab) {
+            prevState.selectedTab = allHeaders[props.defaultTab];
+        } else if ((val[1].search('/') !== -1) && (val[2] === '*') && (val[3] === '1/1')) {
             prevState.selectedTab = allHeaders[0];
         } else if((val[3] === '1/1')) {
             prevState.selectedTab = allHeaders[1];
@@ -69,7 +71,7 @@ const Cron: React.FunctionComponent<CronProp>  = (props) => {
         } else {
             prevState.selectedTab = allHeaders[0];
         }
-        if(!prevState.headers.includes(prevState.selectedTab)) {
+        if (!prevState.headers.includes(prevState.selectedTab && !props.defaultTab)) {
             prevState.selectedTab = prevState.headers[0]
         }
         setState(prevState)
