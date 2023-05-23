@@ -11,8 +11,8 @@ interface CronProp {
     locale?: string
     options?: {
         headers: HeaderKeyType[]
-        defaultTab?: number
     }
+    defaultTab?: number
 }
 interface State {
     value: string[]
@@ -71,7 +71,7 @@ const Cron: React.FunctionComponent<CronProp>  = (props) => {
         } else {
             prevState.selectedTab = allHeaders[0];
         }
-        if (!prevState.headers.includes(prevState.selectedTab && !props.defaultTab)) {
+        if (!prevState.headers.includes(prevState.selectedTab)) {
             prevState.selectedTab = prevState.headers[0]
         }
         setState(prevState)
